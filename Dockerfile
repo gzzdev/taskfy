@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y build-essential libpq-dev
 WORKDIR /code
 
 COPY requirements.txt .
-RUN pip install --no-chache-dir -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 
