@@ -1,10 +1,12 @@
 services:
-  web:
-    build: .
+  django:
+    build: 
+      context: .
+      dockerfile: Dockerfile.backend
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./app:/code
+      - ./backend:/code
     working_dir: /code
     ports:
       - "8000:8000"
