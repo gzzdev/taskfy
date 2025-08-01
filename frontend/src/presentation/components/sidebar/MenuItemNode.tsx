@@ -1,36 +1,51 @@
-import { Link, useLocation } from "react-router";
-
+import { Link } from "react-router";
 import { MenuItem } from "../../../domain/model/MenuItem";
-
-
-interface SelectedItem {  
-  type: "main" | "others";
-  id: string;
-}
+import { ChevronDownIcon } from "../../icons";
 
 interface MenuItemNodeProps {
   item: MenuItem;
-  itemType: "main" | "others";
-  currentSelected: ;
-  onSelectItem: (id: string, itemType: "main" | "others") => void;
+  isSelected: boolean;
+  onSelectItem: () => void;
+  isCurrentLocation: () => void;
 }
 
+// const SubMenuItemNode = ({ SubMenuItem }: MenuItemNodeProps) => {};
 
-export default function MenuItemNode({item, itemType, isSelected, onSelectItem}: MenuItemNodeProps) {
+
+export default function MenuItemNode({
+  item,
+  isSelected,
+  onSelectItem,
+  isCurrentLocation,
+}: MenuItemNodeProps) {
   /** TODO: Shared side bar state */
   const isExpanded = true,
     isHovered = true,
     isMobileOpen = true;
-  const currentMenu = { type: "main", index: 0};
-
+  console.log(`${item.name} is ${isSelected}`);
   return (
     <li>
       {item.subItems ? (
         <button
-          onClick={() => onSelectItem(item.id, itemType)}
-          className={`menu-item group ${currentMenu?.type === itemType}`}
+          onClick={onSelectItem}
+          className={`menu-item group ${
+            isSelected ? "menu-item-active" : "menu-item-inactive"
+          } cursor-pointer ${
+            !isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"
+          }`}
         >
-          <span className="menu-item-icon-size menu-item-icon-active">
+          {(isExpanded || isHovered || isMobileOpen) && (
+            <ChevronDownIcon
+              className={`m1-auto w-5 h-5 transition-transform duration-200 ${
+                isSelected ? "rotate-180 text-brand-500" : ""
+              }`}
+            />
+          )}
+          <span
+            className={`menu-item-icon-size ${
+              isSelected ? "menu-item-icon-active" : "menu-item-icon-inactive"
+            }`}
+          >
             {item.icon}
           </span>
 
@@ -40,31 +55,48 @@ export default function MenuItemNode({item, itemType, isSelected, onSelectItem}:
         </button>
       ) : (
         item.path && (
-          <Link to={item.path} className={`menu-item group ${"menu-item-active"}`}>
-            <span className={`menu-item-icon-size ${"menu-item-icon-active"}`}>
+          <Link
+            to={item.path}
+            className={`menu-item group ${
+              isSelected ? "menu-item-active" : "menu-item-inactive"
+            }`}
+          >
+            <span
+              className={`menu-item-icon-size ${
+                isSelected ? "menu-item-active" : "menu-item-inactive"
+              }`}
+            >
               {item.icon}
             </span>
+
             {(isExpanded || isHovered || isMobileOpen) && (
               <span className="menu-item-text">{item.name}</span>
             )}
           </Link>
         )
       )}
+      {item.subItems && (
+        <div
+          className="overflow-hidden transition-all duration-300"
+          style={{
+            height: isSelected ? "20px" : "0px",
+          }}
+        >
+          <ul className="mt-2 space-y-1 ml-9">
+            {item.subItems.map((subItem) => (
+              <li key={`${item.id}-${subItem.id}`}>
+                {/* <Link
+                    to={subItem.path}
+                    className={`menu-dropdown-item ${
+                      
+                    }`}>
+
+                  </Link> */}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </li>
   );
 }
-
-
-// path && (
-//       <Link
-//         to={path}
-//         className={`menu-item group ${"menu-item-active"}`}>
-//         <span
-//           className={`menu-item-icon-size ${"menu-item-icon-active"}`}>
-//           {icon}
-//         </span>
-//         {(isExpanded || isHovered || isMobileOpen) && (
-//           <span className="menu-item-text">{name}</span>
-//         )}
-//       </Link>
-//     )

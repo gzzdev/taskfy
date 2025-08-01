@@ -4,7 +4,7 @@ import React from "react";
 export type SubMenuItem = {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  // icon: React.ReactNode;
   path?: string;
 };
 
@@ -13,5 +13,5 @@ export type MenuItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems: SubMenuItem[];
+  subItems?: SubMenuItem[];
 };
