@@ -9,7 +9,7 @@ INSTALLED_APPS = [
     # 'django.contrib.sessions',
     
     # Apps
-    'apps.users.infrastructure',       # Model and serializers
+    'apps.users',       # Model and serializers
     
     'rest_framework',
 ]
@@ -46,7 +46,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
 ]
-AUTH_USER_MODEL = 'infrastructure.User'
+AUTH_USER_MODEL = 'users.User'
 
 
 DEBUG = True
@@ -54,3 +54,4 @@ ALLOWED_HOSTS = []
 
 STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+APPEND_SLASH = False
