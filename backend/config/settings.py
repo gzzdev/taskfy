@@ -9,7 +9,7 @@ INSTALLED_APPS = [
     # 'django.contrib.sessions',
     
     # Apps
-    'apps.users',       # Model and serializers
+    'apps.users.apps.UsersConfig', # Model and serializers
     
     'rest_framework',
 ]
@@ -32,11 +32,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
+        'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': '5432',
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'), 
     }
 }
 
@@ -46,7 +46,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
 ]
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.TaskfyUser'
 
 
 DEBUG = True

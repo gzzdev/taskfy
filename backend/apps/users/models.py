@@ -1,1 +1,1 @@
-from .infrastructure.models import User
+from .infrastructure.models import TaskfyUser
