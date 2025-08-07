@@ -12,6 +12,7 @@ INSTALLED_APPS = [
     'apps.users.apps.UsersConfig', # Model and serializers
     
     'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 # MIDDLEWARE = [
