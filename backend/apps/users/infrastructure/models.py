@@ -2,4 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class TaskfyUser(AbstractUser):
-    pass  # Aquí puedes agregar más campos si lo necesitas
+    
+    email = models.EmailField(max_length=255, unique=True)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []

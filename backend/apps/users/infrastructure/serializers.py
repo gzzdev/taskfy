@@ -4,9 +4,5 @@ from .models import TaskfyUser
 class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskfyUser
-        fields = ['username', 'email', 'password']
+        fields = ['email', 'username']
         extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        return TaskfyUser.objects.create_user(**validated_data)
-

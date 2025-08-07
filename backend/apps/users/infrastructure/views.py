@@ -11,14 +11,12 @@ class SignUpView(APIView):
     
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
-        
         if serializer.is_valid():
             user = serializer.save()
-            return Response({"message": "Usuario registrado", "username": user.username}, 
+            return Response({"message": "User registered", }, 
                             status=status.HTTP_201_CREATED)
-        
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class SignInView(APIView):
