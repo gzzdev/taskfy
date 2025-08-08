@@ -10,7 +10,7 @@ INSTALLED_APPS = [
     
     # Apps
     'apps.users.apps.UsersConfig', # Model and serializers
-    
+    'apps.workspaces.apps.WorkspacesConfig',
     'rest_framework',
     'rest_framework.authtoken'
 ]
@@ -49,6 +49,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 AUTH_USER_MODEL = 'users.TaskfyUser'
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Add this line
+    ],
+}
 
 DEBUG = True
 ALLOWED_HOSTS = []
