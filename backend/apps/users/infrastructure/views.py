@@ -13,7 +13,7 @@ class SignUpView(APIView):
         serializer = SignUpSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            return Response({"message": "User registered", }, 
+            return Response({"message": "User registered", "date_joined": user.date_joined }, 
                             status=status.HTTP_201_CREATED)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -22,13 +22,14 @@ class SignUpView(APIView):
 class SignInView(APIView):
     
     def post(self, request):
-        user = authenticate(username=request.data['username'], 
-                            password=request.data['password']) # Verify user
+        
+        # Verify user credentials
+        user = authenticate(email=request.data['email'],
+                            password=request.data['password']) 
         
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key}, 
-                            status=status.HTTP_200_OK)
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
         
         return Response({"message": "Invalid credentials"}, 
                         status=status.HTTP_401_UNAUTHORIZED)
