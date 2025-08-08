@@ -1,25 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router";
+import AppLayout from "./presentation/layout/AppLayout";
+import Dashboard from "./presentation/pages/Dashboard/Dashboard";
+import Workspace from "./presentation/pages/Workspace/Workspace";
 
 function App() {
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Routes>
+          {/* Sidebar option routes */}
+          <Route element={<AppLayout />}>
+            <Route index path="/" element={<Dashboard />} />
+            <Route index path="/task" element={<Dashboard />} />
+            <Route index path="/setting" element={<Dashboard />} />
+            
+            {/* Dynamic workspacing */}
+            <Route path="workspace" element={<Workspace />}>
+              <Route index path="project" element={<Workspace />} />
+            </Route>
+          </Route>
+        </Routes>
+      </Router>
+    </>
   );
 }
 
