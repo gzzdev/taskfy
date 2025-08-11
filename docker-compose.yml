@@ -21,12 +21,11 @@ services:
       dockerfile: ../Dockerfile.frontend
     container_name: taskfy_app
     ports: 
-      - "3000:3000"
+      - "5173:5173"
     volumes:
       - ./frontend:/app
     environment:
       - CHOKIDAR_USEPOLLING=true
-      # - WATCHPACK_POLLING=true
       
   db:
     image: postgres:15
