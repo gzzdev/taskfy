@@ -1,24 +1,19 @@
+import os
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
-ROOT_URLCONF = 'config.urls'
+
 INSTALLED_APPS = [
     # Core
     'django.contrib.auth',
     'django.contrib.contenttypes',
     # 'django.contrib.sessions',
     
-    # 'django.contrib.admin',
-    # 'django.contrib.messages',
-    # 'django.contrib.staticfiles',
-    
     # Apps
-    'apps.users.infrastructure',
-    
-    # Third-party
+    'apps.users.apps.UsersConfig', # Model and serializers
+    'apps.workspaces.apps.WorkspacesConfig',
     'rest_framework',
-    # 'corsheaders',
+    'rest_framework.authtoken'
 ]
-
 
 # MIDDLEWARE = [
 #     'corsheaders.middleware.CorsMiddleware',
@@ -30,27 +25,54 @@ INSTALLED_APPS = [
 #     'django.contrib.messages.middleware.MessageMiddleware',
 # ]
 
-
 ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'taskfy',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'db',
-#         'PORT': '5432',
-#     }
-# }
 
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-# ]
+# Base de datos
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'), 
+    }
+}
 
-# STATIC_URL = '/static/'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 9,
+        },
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+
+]
+
+AUTH_USER_MODEL = 'users.TaskfyUser'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  
+    ],
+}
 
 DEBUG = True
+ALLOWED_HOSTS = []
+
+STATIC_URL = '/static/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+APPEND_SLASH = False
