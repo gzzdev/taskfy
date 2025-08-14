@@ -4,6 +4,6 @@ from .models import Workspace
 class WorkspaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workspace
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'description']
         
         
