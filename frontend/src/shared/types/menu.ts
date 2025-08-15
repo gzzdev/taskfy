@@ -2,14 +2,14 @@ import React from "react";
 
 // type MenuItemType = "link" | "button" | "dropdown";
 export type SubMenuItem = {
-  id: string;
+  id: number;
   name: string;
   // icon: React.ReactNode;
   path?: string;
 };
 
 export type MenuItem = {
-  id: string;
+  id: number;
   name: string;
   icon: React.ReactNode;
   path?: string;

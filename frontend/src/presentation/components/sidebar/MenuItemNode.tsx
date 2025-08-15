@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { MenuItem } from "../../../domain/model/MenuItem";
+import { MenuItem } from "../../../shared/types/menu";
 import { ChevronDownIcon } from "../../icons";
 
 interface MenuItemNodeProps {
@@ -11,7 +11,6 @@ interface MenuItemNodeProps {
 
 // const SubMenuItemNode = ({ SubMenuItem }: MenuItemNodeProps) => {};
 
-
 export default function MenuItemNode({
   item,
   isSelected,
@@ -22,7 +21,7 @@ export default function MenuItemNode({
   const isExpanded = true,
     isHovered = true,
     isMobileOpen = true;
-  console.log(`${item.name} is ${isSelected}`);
+  console.log(`${item.name} is ${item.id}`);
   return (
     <li>
       {item.subItems ? (

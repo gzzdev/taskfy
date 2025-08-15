@@ -1,22 +1,24 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useLocation } from "react-router";
 
-import { MenuItem, SubMenuItem } from "../../domain/model/MenuItem";
+import { MenuItem, SubMenuItem } from "../../shared/types/menu";
 import MenuItemNode from "../components/sidebar/MenuItemNode";
 
-import { GridIcon, SettingsIcon, TaskIcon,  } from "../icons";
+import { GridIcon, SettingsIcon, TaskIcon } from "../icons";
+
+import { Workspace } from "../../domain/model/workspace";
 
 type MenuItemType = "main" | "workspace" | "other";
 
 const mainItems: MenuItem[] = [
   {
-    id: "dashboard",
+    id: -1,
     name: "Inicio",
     icon: <GridIcon />,
     path: "/",
   },
   {
-    id: "tasks",
+    id: -2,
     name: "Mis Tareas",
     path: "/task",
     icon: <TaskIcon />,
@@ -25,17 +27,17 @@ const mainItems: MenuItem[] = [
 
 const workspaceItems: MenuItem[] = [
   {
-    id: "school",
+    id: 31,
     name: "Escuela",
     // path: "/workspace",
     icon: "",
     subItems: [
       {
-        id: "123123123",
+        id: 32,
         name: "Programación",
       },
       {
-        id: "23423423",
+        id: 33,
         name: "Matematicas",
       },
     ],
@@ -44,34 +46,81 @@ const workspaceItems: MenuItem[] = [
 
 const othersItems: MenuItem[] = [
   {
-    id: "settings",
+    id: 12,
     name: "Configuraciones",
     // path: "/setting",
     icon: <SettingsIcon />,
   },
 ];
 
-
 const AppSidebar = () => {
-  
   const isExpanded = true; // Replace with actual state management
   const isMobileOpen = false; // Replace with actual state management
   const isHovered = false; // Replace with actual state management
-  
-  const location = useLocation()
-  const [currentMenu, setCurrenteMenu] = useState<{ type: MenuItemType, id: string } | null>(null);
 
-  const isSelectedItem = useCallback((path: string) => location.pathname===path, [location.pathname]);
+  const location = useLocation();
+  // ***** WORKSPACES
+
+  const [workspaces, setWorkspaces] = useState<MenuItem[]>([]);
+
+  const [currentMenu, setCurrenteMenu] = useState<{
+    type: MenuItemType;
+    id: number;
+  } | null>(null);
+
+  const isSelectedItem = useCallback(
+    (path: string) => location.pathname === path,
+    [location.pathname]
+  );
+
+  useEffect(() => {
+    //a95bc910c0ebbe40a15fba2d3d1b4548ef233952;
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token a95bc910c0ebbe40a15fba2d3d1b4548ef233952",
+      },
+    };
+    async function fetchWorkspaces() {
+      try {
+        const res = await fetch(
+          "http://localhost:8000/api/workspaces/",
+          options
+        );
+
+        const data: Workspace[] = await res.json();
+        const menuItems = workspaceToMenuItems(data);
+        console.log("menuItems");
+        console.log(menuItems);
+        setWorkspaces(menuItems);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        console.log("finalyy");
+      }
+    }
+    fetchWorkspaces();
+  }, []);
+
+  function workspaceToMenuItems(workspace: Workspace[]): MenuItem[] {
+    return workspace.map((ws_data) => ({
+      id: ws_data.id,
+      name: ws_data.name,
+      description: ws_data.description,
+      icon: undefined,
+      subItems: [],
+    }));
+  }
 
   // Build Menu options
   const renderMenuItems = (items: MenuItem[], itemType: MenuItemType) => {
-    console.log(`${itemType} current option: ${currentMenu}`)
+    console.log(`${itemType} current option: ${currentMenu}`);
     return (
-
       <ul className="flex flex-col gap-4">
         {items.map((item) => (
           <MenuItemNode
-            key={`${itemType}-${item.name}`}
+            key={`${itemType}-${item.id}`}
             item={item}
             isSelected={
               currentMenu?.type === itemType && currentMenu?.id === item.id
@@ -82,7 +131,7 @@ const AppSidebar = () => {
                 id: item.id,
               });
             }}
-            isCurrentLocation={()=>{}}
+            isCurrentLocation={() => {}}
           />
         ))}
       </ul>
@@ -131,8 +180,7 @@ const AppSidebar = () => {
               >
                 {isExpanded || isHovered || isMobileOpen ? "OTROS" : "..."}
               </h2>
-              {renderMenuItems(workspaceItems, "workspace")}
-
+              {renderMenuItems(workspaces, "workspace")}
             </div>
 
             <div>
