@@ -1,4 +1,7 @@
+import { useParams } from "react-router";
+
 export default function Workspace() {
+  const params = useParams();
   return (
     <a
       href="https://tailadmin.com/pricing"
@@ -6,7 +9,7 @@ export default function Workspace() {
       rel="nofollow"
       className="flex items-center justify-center p-3 font-medium text-white rounded-lg bg-amber-500 text-theme-sm hover:bg-amber-600"
     >
-      WORKSPACE
+      {`WORKSPACE: ${params.workspaceID}`}
     </a>
   );
 }
