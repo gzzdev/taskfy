@@ -6,7 +6,8 @@ import MenuItemNode from "../components/sidebar/MenuItemNode";
 
 import { GridIcon, SettingsIcon, TaskIcon } from "../icons";
 
-import { Workspace } from "../../domain/model/workspace";
+import { Workspace } from "../../domain/entities/workspace";
+import { useWorkspaces } from "../hooks/useWorkspaces";
 
 type MenuItemType = "main" | "workspace" | "other";
 
@@ -58,11 +59,11 @@ const AppSidebar = () => {
   const isMobileOpen = false; // Replace with actual state management
   const isHovered = false; // Replace with actual state management
 
+  
+  const { workspaces, loading, error } = useWorkspaces();
   const location = useLocation();
-  // ***** WORKSPACES
-
-  const [workspaces, setWorkspaces] = useState<MenuItem[]>([]);
-
+  
+  
   const [currentMenu, setCurrenteMenu] = useState<{
     type: MenuItemType;
     id: number;
@@ -73,46 +74,7 @@ const AppSidebar = () => {
     [location.pathname]
   );
 
-  useEffect(() => {
-    //a95bc910c0ebbe40a15fba2d3d1b4548ef233952;
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Token a95bc910c0ebbe40a15fba2d3d1b4548ef233952",
-      },
-    };
-    async function fetchWorkspaces() {
-      try {
-        const res = await fetch(
-          "http://localhost:8000/api/workspaces/",
-          options
-        );
-
-        const data: Workspace[] = await res.json();
-        const menuItems = workspaceToMenuItems(data);
-        console.log("menuItems");
-        console.log(menuItems);
-        setWorkspaces(menuItems);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        console.log("finalyy");
-      }
-    }
-    fetchWorkspaces();
-  }, []);
-
-  function workspaceToMenuItems(workspace: Workspace[]): MenuItem[] {
-    return workspace.map((ws_data) => ({
-      id: ws_data.id,
-      name: ws_data.name,
-      description: ws_data.description,
-      icon: undefined,
-      subItems: [],
-    }));
-  }
-
+  
   // Build Menu options
   const renderMenuItems = (items: MenuItem[], itemType: MenuItemType) => {
     console.log(`${itemType} current option: ${currentMenu}`);
@@ -120,28 +82,31 @@ const AppSidebar = () => {
       <ul className="flex flex-col gap-4">
         {items.map((item) => (
           <MenuItemNode
-            key={`${itemType}-${item.id}`}
-            item={item}
-            isSelected={
-              currentMenu?.type === itemType && currentMenu?.id === item.id
-            }
-            onSelectItem={() => {
-              setCurrenteMenu({
+          key={`${itemType}-${item.id}`}
+          item={item}
+          isSelected={
+            currentMenu?.type === itemType && currentMenu?.id === item.id
+          }
+          onSelectItem={() => {
+            setCurrenteMenu({
                 type: itemType,
                 id: item.id,
               });
             }}
             isCurrentLocation={() => {}}
-          />
-        ))}
+            />
+          ))}
       </ul>
     );
   };
+  
+  if (loading) return (<div>Cargando</div>)
+  if (error) return <div>{error}</div>;
 
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200
-              ${
+        ${
                 isExpanded || isMobileOpen
                   ? "w-[290px]"
                   : isHovered
