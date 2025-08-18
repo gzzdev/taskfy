@@ -1,7 +1,6 @@
 from django.urls import path
-from .infrastructure.views import ProjectCreateView, ProjectListByWorkspaceView
+from .infrastructure.views import ProjectListView
 
 urlpatterns = [
-    path('', ProjectCreateView.as_view(), name='project-create'),
-    path('<int:workspace_id>', ProjectListByWorkspaceView.as_view(), name='projects-by-workspace')
+    path('', ProjectListView.as_view(), name='worskpace-projects'),
 ]
