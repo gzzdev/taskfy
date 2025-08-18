@@ -11,6 +11,7 @@ INSTALLED_APPS = [
     # Apps
     'apps.users.apps.UsersConfig', # Model and serializers
     'apps.workspaces.apps.WorkspacesConfig',
+    'apps.projects.apps.ProjectsConfig',
     'rest_framework',
     'rest_framework.authtoken'
 ]
