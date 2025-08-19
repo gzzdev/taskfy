@@ -1,1 +1,2 @@
 from .project_views import ProjectListView
+from .member_views import MembershipListView
