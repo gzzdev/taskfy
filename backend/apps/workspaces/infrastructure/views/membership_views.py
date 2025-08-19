@@ -11,7 +11,7 @@ from ..serializers import WorkspaceMembershipSerializer
 from ..models import Workspace, WorkspacesMembership
 
 
-class MembershipView(mixins.DestroyModelMixin, generics.ListCreateAPIView):
+class MembershipView(generics.ListCreateAPIView):
     serializer_class = WorkspaceMembershipSerializer
     permission_classes = [IsAuthenticated]
     
@@ -44,6 +44,5 @@ class MembershipView(mixins.DestroyModelMixin, generics.ListCreateAPIView):
         # Get the workspace from the URL parameters and ensure it exists
         workspace_id = self.kwargs.get('workspace_id')
         workspace = get_object_or_404(Workspace, id=workspace_id)
-        
         serializer.save(workspace=workspace)
             
