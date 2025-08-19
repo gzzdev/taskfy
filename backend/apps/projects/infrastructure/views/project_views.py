@@ -19,7 +19,7 @@ class ProjectListView(generics.ListCreateAPIView):
                                       memberships__user=self.request.user).distinct()
         
     def perform_create(self, serializer):
-        workspace_id = self.request.data.get('workspace')
+        workspace_id = self.kwargs.get('workspace_id')
         workspace = get_object_or_404(Workspace, id=workspace_id)
         project = serializer.save(created_by=self.request.user,
                                   workspace=workspace)
