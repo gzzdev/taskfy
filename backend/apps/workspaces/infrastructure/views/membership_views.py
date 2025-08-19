@@ -11,7 +11,7 @@ from ..serializers import WorkspaceMembershipSerializer
 from ..models import Workspace, WorkspacesMembership
 
 
-class MembershipView(generics.DestroyAPIView, generics.ListCreateAPIView):
+class MembershipView(generics.ListCreateAPIView):
     serializer_class = WorkspaceMembershipSerializer
     permission_classes = [IsAuthenticated]
     
@@ -47,9 +47,6 @@ class MembershipView(generics.DestroyAPIView, generics.ListCreateAPIView):
         
         serializer.save(workspace=workspace)
             
-    def delete(self, request, *args, **kwargs):
-        return Response({'aa': 'asdads'}, status=status.HTTP_204_NO_CONTENT)
-    
     
 class DeleteMembershipView(generics.DestroyAPIView):
     serializer_class = WorkspaceMembershipSerializer
