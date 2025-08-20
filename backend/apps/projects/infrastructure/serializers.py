@@ -1,11 +1,11 @@
 from rest_framework import serializers
+from django.conf import settings
 
-from apps.workspaces.infrastructure.serializers import WorkspaceSerializer
 from .models import Project, ProjectMembership
 
 
 class ProjectMembershipSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+    user = settings.AUTH_USER_MODEL
 
     class Meta: 
         model = ProjectMembership
