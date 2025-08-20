@@ -72,6 +72,25 @@ REST_FRAMEWORK = {
 }
 
 DEBUG = True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        },
+    },
+}
+
+
 ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_ALLOW_ALL = False
