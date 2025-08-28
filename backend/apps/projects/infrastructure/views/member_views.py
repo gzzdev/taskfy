@@ -52,3 +52,17 @@ class MembershipListView(generics.ListCreateAPIView):
         serializer.save(project_id=project_id)
         
         
+class DeleteMembershipView(generics.DestroyAPIView):
+    serializer_class = ProjectMembershipSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        project_id, workspace_id = self.kwargs.get('project_id'), self.kwargs.get('workspace_id')
+        user_id = self.kwargs.get('user_id')
+        return get_object_or_404(ProjectMembership, project__workspace_id=workspace_id, 
+                                 project_id=project_id, user_id=user_id)
+    
+    def delete(self, request, *args, **kwargs):
+        membership = self.get_object()
+        membership.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
