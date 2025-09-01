@@ -1,4 +1,5 @@
 
+import logging.config
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -9,7 +10,7 @@ from django.db import IntegrityError
 
 from ..serializers import WorkspaceMembershipSerializer
 from ..models import Workspace, WorkspacesMembership
-
+from apps.projects.models import Project, ProjectMembership
 
 class MembershipView(generics.ListCreateAPIView):
     serializer_class = WorkspaceMembershipSerializer
@@ -55,9 +56,13 @@ class DeleteMembershipView(generics.DestroyAPIView):
     def get_object(self):
         workspace_id = self.kwargs.get('workspace_id')
         user_id = self.kwargs.get('user_id')
-        return get_object_or_404(WorkspacesMembership, workspace_id=workspace_id, user_id=user_id)
+        return get_object_or_404(WorkspacesMembership, workspace=workspace_id, user=user_id)
     
     def delete(self, request, *args, **kwargs):
         membership = self.get_object()
+        if ProjectMembership.objects.filter(user=membership.user, 
+                                            project__workspace_id=membership.workspace.id).exists():
+            return Response({'detail': 'User is a member of some project'}, status=status.HTTP_400_BAD_REQUEST)
+        
         membership.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
