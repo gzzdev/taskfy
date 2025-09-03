@@ -15,6 +15,18 @@ services:
     depends_on:
       - db
 
+  frontend: 
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.frontend
+    container_name: taskfy_app
+    ports: 
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      
   db:
     image: postgres:15
     container_name: postgress_db
