@@ -1,9 +1,13 @@
 from django.db import models
 from django.conf import settings
 
+class WorkspaceRole(models.TextChoices):
+    OWNER = 'owner', 'Owner'
+    ADMIN = 'admin', 'Admin'
+    MEMBER = 'member', 'Member'
+
 
 class Workspace(models.Model):
-    
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=500, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -16,19 +20,16 @@ class Workspace(models.Model):
 
 
 class WorkspacesMembership(models.Model):
-    
-    ROLE_CHOICES = (('owner', 'Owner'),
-                    ('admin', 'Admin'), 
-                    ('member', 'Member'))
-    
-    
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
+    
     workspace = models.ForeignKey(Workspace, 
                                   related_name='membership',
                                   on_delete=models.CASCADE)
     
-    role = models.TextField(max_length=16, choices=ROLE_CHOICES, default='member')
+    role = models.TextField(max_length=16, choices=WorkspaceRole.choices, 
+                            default=WorkspaceRole.MEMBER)
+    
     joined_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:

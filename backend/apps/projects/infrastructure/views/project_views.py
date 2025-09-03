@@ -1,0 +1,32 @@
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
+from ..models import Project, ProjectMembership, ProjectRole
+from ..serializers import ProjectSerializer
+
+from apps.projects.infrastructure.models import Workspace
+
+
+class ProjectListView(generics.ListCreateAPIView):
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        workspace_id = self.kwargs['workspace_id']
+        return Project.objects.filter(workspace_id=workspace_id,
+                                      memberships__user=self.request.user).distinct()
+        
+        
+    def perform_create(self, serializer):
+        workspace_id = self.kwargs.get('workspace_id')
+        get_object_or_404(Workspace, id=workspace_id) # Ensure workspace exists
+        
+        project = serializer.save(workspace_id=workspace_id, created_by=self.request.user)
+        
+        ## Add member relation
+        ProjectMembership.objects.create(project=project, 
+                                         user=self.request.user, 
+                                         role=ProjectRole.OWNER)
+
